@@ -187,6 +187,163 @@
             Chỉ còn lại Bé Pi và tách cà phê bình yên ☕.</p>
         </div>
     </div>
+    <div class="code-box">
+        Sub Import_Auto_Universal()
+
+    Dim fd As FileDialog
+    Dim filePath As String, fileExt As String, folderPath As String
+    Dim ws As Worksheet, qt As QueryTable
+    Dim FileName As String, TenSheet As String
+    Dim i As Long, delimiter As String
+
+    '==================================================
+    ' 1. Ch?n file b?t k? (CSV, TSV, TXT, LOG…)
+    '==================================================
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+    With fd
+        .Title = "Ch?n file d? li?u c?n m?"
+        .Filters.Clear
+        .Filters.Add "Text Data", "*.csv; *.tsv; *.txt; *.log; *.dat", 1
+        .AllowMultiSelect = False
+        If .Show <> -1 Then Exit Sub
+        filePath = .SelectedItems(1)
+    End With
+
+    ' L?y folder
+    folderPath = Left(filePath, InStrRev(filePath, "\") - 1)
+
+    '==================================================
+    ' 2. Nh?n bi?t delimiter b?ng AI logic
+    '==================================================
+    delimiter = DetectDelimiter(filePath)
+
+    If delimiter = "" Then
+        MsgBox "Không th? nh?n di?n delimiter!", vbCritical
+        Exit Sub
+    End If
+
+    '==================================================
+    ' 3. T?o sheet t? tên file
+    '==================================================
+    FileName = Split(filePath, "\")(UBound(Split(filePath, "\")))
+    TenSheet = Left(FileName, InStrRev(FileName, ".") - 1)
+    TenSheet = Left(TenSheet, 30)
+
+    On Error Resume Next
+    Set ws = ThisWorkbook.Sheets(TenSheet)
+    On Error GoTo 0
+
+    If ws Is Nothing Then
+        Set ws = ThisWorkbook.Sheets.Add(After:=Sheets(Sheets.count))
+        ws.Name = TenSheet
+    Else
+        Set ws = ThisWorkbook.Sheets.Add(After:=Sheets(Sheets.count))
+        ws.Name = TenSheet & "_" & Format(Now, "hhmmss")
+    End If
+
+    '==================================================
+    ' 4. D?n d? li?u cu
+    '==================================================
+    ws.cells.Clear
+    For Each qt In ws.QueryTables
+        qt.Delete
+    Next qt
+
+    Application.ScreenUpdating = False
+
+    '==================================================
+    ' 5. Import file
+    '==================================================
+    With ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A1"))
+        .TextFileParseType = xlDelimited
+
+        ' Reset t?t c? delimiter
+        .TextFileCommaDelimiter = False
+        .TextFileSemicolonDelimiter = False
+        .TextFileTabDelimiter = False
+        .TextFileOtherDelimiter = False
+
+        ' Gán delimiter dúng
+        Select Case delimiter
+            Case ",": .TextFileCommaDelimiter = True
+            Case ";": .TextFileSemicolonDelimiter = True
+            Case vbTab: .TextFileTabDelimiter = True
+            Case "|": .TextFileOtherDelimiter = True: .TextFileOtherDelimiter = "|"
+            Case Else: .TextFileOtherDelimiter = True: .TextFileOtherDelimiter = delimiter
+        End Select
+
+        ' --- Ép TEXT cho 500 c?t ---
+        Dim TextCols(1 To 500) As Long
+        For i = 1 To 500
+            TextCols(i) = xlTextFormat
+        Next i
+        .TextFileColumnDataTypes = TextCols
+
+        .TextFilePlatform = 65001        ' UTF-8
+        .TextFileTextQualifier = xlTextQualifierDoubleQuote
+        .Refresh BackgroundQuery:=False
+    End With
+
+    ws.UsedRange.NumberFormat = "@"
+    ws.Columns.AutoFit
+
+    Application.ScreenUpdating = True
+
+    
+    '==================================================
+    ' 7. Thông báo
+    '==================================================
+    MsgBox "Ðã import thành công!" & vbCrLf & vbCrLf & _
+           "File: " & FileName & vbCrLf & _
+           "Delimiter nh?n di?n: " & Replace(delimiter, vbTab, "TAB") & vbCrLf & _
+           "Sheet m?i: " & ws.Name, _
+           vbInformation, "THÀNH CÔNG"
+
+End Sub
+
+
+
+'===========================================================
+'  HÀM T? Ð?NG NH?N BI?T DELIMITER (AI LOGIC)
+'===========================================================
+Function DetectDelimiter(path As String) As String
+    Dim f As Integer: f = FreeFile
+    Dim firstLine As String
+    Dim dCandidates As Variant
+    Dim d As Variant, count As Long, bestCount As Long
+    Dim bestDelimiter As String
+
+    ' Các delimiter thu?ng g?p
+    dCandidates = Array(",", ";", vbTab, "|")
+
+    On Error GoTo ErrHandler
+
+    Open path For Input As #f
+    Line Input #f, firstLine
+    Close #f
+
+    bestDelimiter = ""
+    bestCount = 0
+
+    ' Tìm delimiter có s? l?n xu?t hi?n cao nh?t
+    For Each d In dCandidates
+        count = UBound(Split(firstLine, d))
+        If count > bestCount Then
+            bestCount = count
+            bestDelimiter = d
+        End If
+    Next d
+
+    DetectDelimiter = bestDelimiter
+    Exit Function
+
+ErrHandler:
+    DetectDelimiter = ""
+End Function
+
+
+
+    </div>
 
 </div>
 
