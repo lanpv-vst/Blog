@@ -69,6 +69,7 @@
             font-family: Consolas, monospace;
             font-size: 15px;
             margin-top: 15px;
+            overflow-x: auto;
         }
 
         footer {
@@ -112,57 +113,66 @@
 
     <!-- Block 2 -->
     <div class="story-block fade">
-    <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWx4bng5MnNsazZhZjR1NHl3OXd0Mm5ybm45NmJobGN0ajB4ZzlibCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/1noQjZGz89r3TqekG2/giphy.gif" alt="Hacker vibes cute" />
-    <div class="story-text">
-        <p>
-            Không chịu nổi cảnh Excel hành mình như người yêu cũ,
-            bé Pi quyết định chơi lớn: dùng VBA.  
-            Nhưng khổ nỗi… VBA với Pi giống như tiếng cá heo kêu — nghe vui nhưng chẳng hiểu gì ❓
-        </p>
-        <p>
-            Thế là Pi bật ChatGPT và gõ thật mạnh:
-            <i><b>
-                “Viết cho tôi đoạn code VBA để:
-                <br>1. Mở cửa sổ chọn file TSV.
-                <br>2. Tạo sheet mới tên dataX (X = tổng số sheet + 1).
-                <br>3. Nạp dữ liệu TSV vào sheet mới, tất cả cột đều dạng text.
-                <br>Nhớ chỉ tôi cách dán code và chạy nữa!”
-            </b></i>
-        </p>
-    </div>
-    <div class="story-text">
-        <p>
-            ChatGPT mỉm cười kiểu “để anh lo” rồi đưa Pi đoạn code sáng lấp lánh.
-            Pi lấy hết can đảm, nhấn <b>Alt + F11</b> ❗  
-        </p>
-
-        <p>
-            Cửa sổ VBA bật lên… nhìn cổ như di tích Windows XP, nhưng uy lực thì vẫn như rồng thần trong truyền thuyết.
-        </p>
-
-        <div class="code-box">
-            Dim filePath As String <br/>
-            Dim ws As Worksheet <br/><br/>
-
-            filePath = Application.GetOpenFilename("TSV Files (*.tsv), *.tsv") <br/>
-            Set ws = Sheets.Add <br/>
-            ws.Name = "data" & Sheets.Count <br/><br/>
-            ...............................................<br/>
-            End With<br/>
-            <i>(code dỉ code gì cũng có khi đọc hết bài "lày" nhé!)</i>
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExaWx4bng5MnNsazZhZjR1NHl3OXd0Mm5ybm45NmJobGN0ajB4ZzlibCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/1noQjZGz89r3TqekG2/giphy.gif" alt="Hacker vibes cute" />
+        <div class="story-text">
+            <p>
+                Không chịu nổi cảnh Excel hành mình như người yêu cũ,
+                bé Pi quyết định chơi lớn: dùng VBA.  
+                Nhưng khổ nỗi… VBA với Pi giống như tiếng cá heo kêu — nghe vui nhưng chẳng hiểu gì ❓
+            </p>
+            <p>
+                Thế là Pi bật ChatGPT và gõ thật mạnh:
+                <i><b>
+                    “Viết cho tôi đoạn code VBA để:
+                    <br>1. Mở cửa sổ chọn file TSV.
+                    <br>2. Tạo sheet mới tên dataX (X = tổng số sheet + 1).
+                    <br>3. Nạp dữ liệu TSV vào sheet mới, tất cả cột đều dạng text.
+                    <br>Nhớ chỉ tôi cách dán code và chạy nữa!”
+                </b></i>
+            </p>
         </div>
-
-        <p>
-            Nhìn đoạn code dài hơn đời sinh viên năm nhất,  
-            bé Pi cảm giác mình biến thành hacker xịn — chỉ thiếu cái kính râm và tiếng bàn phím gõ *lách tách* phía sau 😎💻.
-        </p>
     </div>
-</div>
 
+    <!-- Block 2.5 -->
+    <div class="story-block fade">
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExb3ozYnU5bWdndnJsc250czZndmg3NTc0Y3lpMzRkcTIwMGo4MmtkaCZlcD12MV9naWZzX3NlYXJjaCZjdT1n/25KEhzwCBBFPb79puo/giphy.gif" alt="story time" />
+        <div class="story-text">
+            <p>
+                ChatGPT mỉm cười kiểu “để anh lo” rồi đưa Pi đoạn code sáng lấp lánh.
+                Pi lấy hết can đảm, nhấn <b>Alt + F11</b> ❗  
+            </p>
+            <p>
+                Cửa sổ VBA bật lên… nhìn cổ như di tích Windows XP, nhưng uy lực thì vẫn như rồng thần trong truyền thuyết.
+            </p>
+
+            <div class="code-box">
+                Dim filePath As String <br/>
+                Dim ws As Worksheet <br/><br/>
+
+                filePath = Application.GetOpenFilename("TSV Files (*.tsv), *.tsv") <br/>
+                Set ws = Sheets.Add <br/>
+                ws.Name = "data" & Sheets.Count <br/><br/>
+
+                With ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A1")) <br/>
+                &nbsp;&nbsp;.TextFileParseType = xlDelimited <br/>
+                &nbsp;&nbsp;.TextFileOtherDelimiter = vbTab <br/>
+                &nbsp;&nbsp;.TextFileColumnDataTypes = Array(1) <br/>
+                &nbsp;&nbsp;.Refresh BackgroundQuery:=False <br/>
+                End With <br/><br/>
+
+                ' (Code thật đây, không “code dỉ code gì” nữa 😆)
+            </div>
+
+            <p>
+                Nhìn đoạn code dài hơn đời sinh viên năm nhất,  
+                bé Pi cảm giác mình biến thành hacker xịn — chỉ thiếu cái kính râm và tiếng bàn phím gõ *lách tách* phía sau 😎💻.
+            </p>
+        </div>
+    </div>
 
     <!-- Block 3 -->
     <div class="story-block fade">
-        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2V5MHBzcWRqcGJpMzF2YjkwMnN4cjcxMXJkNmEzcDNoeW1mcWFnaSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/fasjTJwTFW2goeR2uV/giphy.gif" alt="Excel gọn gàng" />
+        <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2V5MHBzcWRqcGJpMzF2YjkwMnN4cjcxMXJkNmEzcDNoeW1mcWFnaSZlcD12MV9naWZzX3NlYXJjaCZjdT1n/fasjTJwTFW2goeR2uV/giphy.gif" alt="Excel gọn gàng" />
         <div class="story-text">
             <p>Bé Pi chạy macro. Excel thong thả hỏi:</p>
             <p><b>“Chọn file đi bạn trẻ.”</b></p>
@@ -172,7 +182,7 @@
 
     <!-- Block 4 -->
     <div class="story-block fade">
-        <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3c3FpeWo5NHE2anRlaGVsa2RzZ2V2bjA2cHhtOGV3cHYzM3ZhbTRkZSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/ES4Vcv8zWfIt2/giphy.gif" alt="Cà phê bình yên" />
+        <img src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3c3FpeWo5NHE2anRlaGVsa2RzZ2V2bjA2cHhtOGV3cHYzM3ZhbTRkZSZlcD12MV9naWZzX3NlYXJjaCZjdT1n/ES4Vcv8zWfIt2/giphy.gif" alt="Cà phê bình yên" />
         <div class="story-text">
             <p>Bé Pi dựa lưng, khoanh tay:</p>
             <p><i>“Vậy mà bao năm nay mình đi tách cột bằng tay như nông dân thời kỳ đồ đá.”</i></p>
@@ -190,7 +200,6 @@
 </footer>
 
 <script>
-    // Hiệu ứng fade-in khi cuộn trang
     const fades = document.querySelectorAll('.fade');
 
     const reveal = () => {
