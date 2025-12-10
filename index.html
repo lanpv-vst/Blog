@@ -114,13 +114,21 @@
     <div class="story-block fade">
         <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000" alt="Hacker vibes" />
         <div class="story-text">
-            <p>Bé Pi quyết định dùng VBA, dù cậu chỉ biết đúng một điều: VBA nằm sau phím <b>Alt + F11</b> ❗</p>
+            <p>Không thể chịu được nữa, bé Pi quyết định dùng VBA. Nhưng viết VBA thì… Pi không biết. Thế là cậu mở ChatGPT và bảo:
+“Viết giúp tôi đoạn code VBA để:
+1.	Mở cửa sổ chọn file TSV.
+2.	Tạo một sheet mới tên dataX. (X = tổng shố sheet+1)
+3.	Nhập dữ liệu TSV vào sheet mới (các cột đều định dạng text).
+Nhớ giải thích cách dán code và chạy nữa.”
+ChatGPT gật đầu và đưa cho Pi đoạn code.
+<b>Alt + F11</b> ❗</p>
             <p>Cậu mở cửa sổ lập trình cổ lỗ sĩ — trông như phần mềm Windows XP — nhưng vẫn chạy cực tốt.</p>
 
             <div class="code-box">
 filePath = Application.GetOpenFilename() <br/>
 Set ws = Sheets.Add <br/>
 ws.Name = "data" & Sheets.Count
+......................
             </div>
 
             <p>Nhìn ba dòng code mà Bé Pi cảm giác mình là hacker trong phim Hollywood. Chỉ thiếu cái kính râm 😎.</p>
