@@ -188,162 +188,160 @@
         </div>
     </div>
     <div class="code-box">
-        Sub Import_Auto_Universal()
+<br/>
+&lt;!-- CODE VBA ĐẦY ĐỦ – COPY ĐƯỢC NGAY 😎 --&gt;<br/><br/>
 
-    Dim fd As FileDialog
-    Dim filePath As String, fileExt As String, folderPath As String
-    Dim ws As Worksheet, qt As QueryTable
-    Dim FileName As String, TenSheet As String
-    Dim i As Long, delimiter As String
+Sub Import_Auto_Universal(control As IRibbonControl)<br/>
+&nbsp;&nbsp;Dim fd As FileDialog<br/>
+&nbsp;&nbsp;Dim filePath As String, fileExt As String, folderPath As String<br/>
+&nbsp;&nbsp;Dim ws As Worksheet, qt As QueryTable<br/>
+&nbsp;&nbsp;Dim FileName As String, TenSheet As String<br/>
+&nbsp;&nbsp;Dim i As Long, delimiter As String<br/><br/>
 
-    '==================================================
-    ' 1. Ch?n file b?t k? (CSV, TSV, TXT, LOG…)
-    '==================================================
-    Set fd = Application.FileDialog(msoFileDialogFilePicker)
-    With fd
-        .Title = "Ch?n file d? li?u c?n m?"
-        .Filters.Clear
-        .Filters.Add "Text Data", "*.csv; *.tsv; *.txt; *.log; *.dat", 1
-        .AllowMultiSelect = False
-        If .Show <> -1 Then Exit Sub
-        filePath = .SelectedItems(1)
-    End With
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 1. Chọn file bất kỳ (CSV, TSV, TXT, LOG…)<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;Set fd = Application.FileDialog(msoFileDialogFilePicker)<br/>
+&nbsp;&nbsp;With fd<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.Title = "Chọn file dữ liệu cần mở"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.Filters.Clear<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.Filters.Add "Text Data", "*.csv; *.tsv; *.txt; *.log; *.dat", 1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.AllowMultiSelect = False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;If .Show &lt;&gt; -1 Then Exit Sub<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;filePath = .SelectedItems(1)<br/>
+&nbsp;&nbsp;End With<br/><br/>
 
-    ' L?y folder
-    folderPath = Left(filePath, InStrRev(filePath, "\") - 1)
+&nbsp;&nbsp;folderPath = Left(filePath, InStrRev(filePath, "\") - 1)<br/><br/>
 
-    '==================================================
-    ' 2. Nh?n bi?t delimiter b?ng AI logic
-    '==================================================
-    delimiter = DetectDelimiter(filePath)
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 2. Nhận biết delimiter bằng AI logic<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;delimiter = DetectDelimiter(filePath)<br/><br/>
 
-    If delimiter = "" Then
-        MsgBox "Không th? nh?n di?n delimiter!", vbCritical
-        Exit Sub
-    End If
+&nbsp;&nbsp;If delimiter = "" Then<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;MsgBox "Không thể nhận diện delimiter!", vbCritical<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Exit Sub<br/>
+&nbsp;&nbsp;End If<br/><br/>
 
-    '==================================================
-    ' 3. T?o sheet t? tên file
-    '==================================================
-    FileName = Split(filePath, "\")(UBound(Split(filePath, "\")))
-    TenSheet = Left(FileName, InStrRev(FileName, ".") - 1)
-    TenSheet = Left(TenSheet, 30)
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 3. Tạo sheet từ tên file<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;FileName = Split(filePath, "\")(UBound(Split(filePath, "\")))<br/>
+&nbsp;&nbsp;TenSheet = Left(FileName, InStrRev(FileName, ".") - 1)<br/>
+&nbsp;&nbsp;TenSheet = Left(TenSheet, 30)<br/><br/>
 
-    On Error Resume Next
-    Set ws = ThisWorkbook.Sheets(TenSheet)
-    On Error GoTo 0
+&nbsp;&nbsp;On Error Resume Next<br/>
+&nbsp;&nbsp;Set ws = ThisWorkbook.Sheets(TenSheet)<br/>
+&nbsp;&nbsp;On Error GoTo 0<br/><br/>
 
-    If ws Is Nothing Then
-        Set ws = ThisWorkbook.Sheets.Add(After:=Sheets(Sheets.count))
-        ws.Name = TenSheet
-    Else
-        Set ws = ThisWorkbook.Sheets.Add(After:=Sheets(Sheets.count))
-        ws.Name = TenSheet & "_" & Format(Now, "hhmmss")
-    End If
+&nbsp;&nbsp;If ws Is Nothing Then<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Set ws = ThisWorkbook.Sheets.Add(After:=Sheets(Sheets.Count))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ws.Name = TenSheet<br/>
+&nbsp;&nbsp;Else<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Set ws = ThisWorkbook.Sheets.Add(After:=Sheets(Sheets.Count))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ws.Name = TenSheet & "_" & Format(Now, "hhmmss")<br/>
+&nbsp;&nbsp;End If<br/><br/>
 
-    '==================================================
-    ' 4. D?n d? li?u cu
-    '==================================================
-    ws.cells.Clear
-    For Each qt In ws.QueryTables
-        qt.Delete
-    Next qt
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 4. Dọn dữ liệu cũ<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;ws.Cells.Clear<br/>
+&nbsp;&nbsp;For Each qt In ws.QueryTables<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;qt.Delete<br/>
+&nbsp;&nbsp;Next qt<br/><br/>
 
-    Application.ScreenUpdating = False
+&nbsp;&nbsp;Application.ScreenUpdating = False<br/><br/>
 
-    '==================================================
-    ' 5. Import file
-    '==================================================
-    With ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A1"))
-        .TextFileParseType = xlDelimited
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 5. Import file<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;With ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A1"))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileParseType = xlDelimited<br/><br/>
 
-        ' Reset t?t c? delimiter
-        .TextFileCommaDelimiter = False
-        .TextFileSemicolonDelimiter = False
-        .TextFileTabDelimiter = False
-        .TextFileOtherDelimiter = False
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileCommaDelimiter = False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileSemicolonDelimiter = False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileTabDelimiter = False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileOtherDelimiter = False<br/><br/>
 
-        ' Gán delimiter dúng
-        Select Case delimiter
-            Case ",": .TextFileCommaDelimiter = True
-            Case ";": .TextFileSemicolonDelimiter = True
-            Case vbTab: .TextFileTabDelimiter = True
-            Case "|": .TextFileOtherDelimiter = True: .TextFileOtherDelimiter = "|"
-            Case Else: .TextFileOtherDelimiter = True: .TextFileOtherDelimiter = delimiter
-        End Select
+&nbsp;&nbsp;&nbsp;&nbsp;Select Case delimiter<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Case ",": .TextFileCommaDelimiter = True<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Case ";": .TextFileSemicolonDelimiter = True<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Case vbTab: .TextFileTabDelimiter = True<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Case "|": .TextFileOtherDelimiter = True: .TextFileOtherDelimiter = "|"<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Case Else: .TextFileOtherDelimiter = True: .TextFileOtherDelimiter = delimiter<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;End Select<br/><br/>
 
-        ' --- Ép TEXT cho 500 c?t ---
-        Dim TextCols(1 To 500) As Long
-        For i = 1 To 500
-            TextCols(i) = xlTextFormat
-        Next i
-        .TextFileColumnDataTypes = TextCols
+&nbsp;&nbsp;&nbsp;&nbsp;Dim TextCols(1 To 500) As Long<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;For i = 1 To 500<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TextCols(i) = xlTextFormat<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;Next i<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileColumnDataTypes = TextCols<br/><br/>
 
-        .TextFilePlatform = 65001        ' UTF-8
-        .TextFileTextQualifier = xlTextQualifierDoubleQuote
-        .Refresh BackgroundQuery:=False
-    End With
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFilePlatform = 65001<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.TextFileTextQualifier = xlTextQualifierDoubleQuote<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;.Refresh BackgroundQuery:=False<br/>
+&nbsp;&nbsp;End With<br/><br/>
 
-    ws.UsedRange.NumberFormat = "@"
-    ws.Columns.AutoFit
+&nbsp;&nbsp;ws.UsedRange.NumberFormat = "@"<br/>
+&nbsp;&nbsp;ws.Columns.AutoFit<br/><br/>
 
-    Application.ScreenUpdating = True
+&nbsp;&nbsp;Application.ScreenUpdating = True<br/><br/>
 
-    
-    '==================================================
-    ' 7. Thông báo
-    '==================================================
-    MsgBox "Ðã import thành công!" & vbCrLf & vbCrLf & _
-           "File: " & FileName & vbCrLf & _
-           "Delimiter nh?n di?n: " & Replace(delimiter, vbTab, "TAB") & vbCrLf & _
-           "Sheet m?i: " & ws.Name, _
-           vbInformation, "THÀNH CÔNG"
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 6. Mở folder chứa file<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;Shell "explorer.exe """ & folderPath & """", vbNormalFocus<br/><br/>
 
-End Sub
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;' 7. Thông báo<br/>
+&nbsp;&nbsp;'==================================================<br/>
+&nbsp;&nbsp;MsgBox "Đã import thành công!" & vbCrLf & vbCrLf & _<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"File: " & FileName & vbCrLf & _<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Delimiter nhận diện: " & Replace(delimiter, vbTab, "TAB") & vbCrLf & _<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"Sheet mới: " & ws.Name, _<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vbInformation, "THÀNH CÔNG"<br/><br/>
 
+End Sub<br/><br/>
 
+'===========================================================<br/>
+'  HÀM TỰ ĐỘNG NHẬN BIẾT DELIMITER (AI LOGIC)<br/>
+'===========================================================<br/>
+Function DetectDelimiter(path As String) As String<br/>
+&nbsp;&nbsp;Dim f As Integer: f = FreeFile<br/>
+&nbsp;&nbsp;Dim firstLine As String<br/>
+&nbsp;&nbsp;Dim dCandidates As Variant<br/>
+&nbsp;&nbsp;Dim d As Variant, count As Long, bestCount As Long<br/>
+&nbsp;&nbsp;Dim bestDelimiter As String<br/><br/>
 
-'===========================================================
-'  HÀM T? Ð?NG NH?N BI?T DELIMITER (AI LOGIC)
-'===========================================================
-Function DetectDelimiter(path As String) As String
-    Dim f As Integer: f = FreeFile
-    Dim firstLine As String
-    Dim dCandidates As Variant
-    Dim d As Variant, count As Long, bestCount As Long
-    Dim bestDelimiter As String
+&nbsp;&nbsp;dCandidates = Array(",", ";", vbTab, "|")<br/><br/>
 
-    ' Các delimiter thu?ng g?p
-    dCandidates = Array(",", ";", vbTab, "|")
+&nbsp;&nbsp;On Error GoTo ErrHandler<br/><br/>
 
-    On Error GoTo ErrHandler
+&nbsp;&nbsp;Open path For Input As #f<br/>
+&nbsp;&nbsp;Line Input #f, firstLine<br/>
+&nbsp;&nbsp;Close #f<br/><br/>
 
-    Open path For Input As #f
-    Line Input #f, firstLine
-    Close #f
+&nbsp;&nbsp;bestDelimiter = ""<br/>
+&nbsp;&nbsp;bestCount = 0<br/><br/>
 
-    bestDelimiter = ""
-    bestCount = 0
+&nbsp;&nbsp;For Each d In dCandidates<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;count = UBound(Split(firstLine, d))<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;If count &gt; bestCount Then<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestCount = count<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bestDelimiter = d<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;End If<br/>
+&nbsp;&nbsp;Next d<br/><br/>
 
-    ' Tìm delimiter có s? l?n xu?t hi?n cao nh?t
-    For Each d In dCandidates
-        count = UBound(Split(firstLine, d))
-        If count > bestCount Then
-            bestCount = count
-            bestDelimiter = d
-        End If
-    Next d
+&nbsp;&nbsp;DetectDelimiter = bestDelimiter<br/>
+&nbsp;&nbsp;Exit Function<br/><br/>
 
-    DetectDelimiter = bestDelimiter
-    Exit Function
+ErrHandler:<br/>
+&nbsp;&nbsp;DetectDelimiter = ""<br/>
+End Function<br/>
 
-ErrHandler:
-    DetectDelimiter = ""
-End Function
-
-
-
-    </div>
+<br/>
+' (Code ở cuối trang — mở lên là IQ tăng 3 điểm 😆)<br/>
+</div>
 
 </div>
 
