@@ -112,28 +112,56 @@
 
     <!-- Block 2 -->
     <div class="story-block fade">
-        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000" alt="Hacker vibes" />
-        <div class="story-text">
-            <p>Không thể chịu được nữa, bé Pi quyết định dùng VBA. Nhưng viết VBA thì… Pi không biết. Thế là cậu mở ChatGPT và bảo:
-“Viết giúp tôi đoạn code VBA để:
-1.	Mở cửa sổ chọn file TSV.
-2.	Tạo một sheet mới tên dataX. (X = tổng shố sheet+1)
-3.	Nhập dữ liệu TSV vào sheet mới (các cột đều định dạng text).
-Nhớ giải thích cách dán code và chạy nữa.”
-ChatGPT gật đầu và đưa cho Pi đoạn code.
-<b>Alt + F11</b> ❗</p>
-            <p>Cậu mở cửa sổ lập trình cổ lỗ sĩ — trông như phần mềm Windows XP — nhưng vẫn chạy cực tốt.</p>
+    <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=1000" alt="Hacker vibes cute" />
+    <div class="story-text">
+        <p>
+            Không chịu nổi cảnh Excel hành mình như người yêu cũ,
+            bé Pi quyết định chơi lớn: dùng VBA.  
+            Nhưng khổ nỗi… VBA với Pi giống như tiếng cá heo kêu — nghe vui nhưng chẳng hiểu gì ❓
+        </p>
+        <p>
+            Thế là Pi bật ChatGPT và gõ thật mạnh:
+            <i><b>
+                “Viết cho tôi đoạn code VBA để:
+                <br>1. Mở cửa sổ chọn file TSV.
+                <br>2. Tạo sheet mới tên dataX (X = tổng số sheet + 1).
+                <br>3. Nạp dữ liệu TSV vào sheet mới, tất cả cột đều dạng text.
+                <br>Nhớ chỉ tôi cách dán code và chạy nữa!”
+            </b></i>
+        </p>
 
-            <div class="code-box">
-filePath = Application.GetOpenFilename() <br/>
-Set ws = Sheets.Add <br/>
-ws.Name = "data" & Sheets.Count
-......................
-            </div>
+        <p>
+            ChatGPT mỉm cười kiểu “để anh lo” rồi đưa Pi đoạn code sáng lấp lánh.
+            Pi lấy hết can đảm, nhấn <b>Alt + F11</b> ❗  
+        </p>
 
-            <p>Nhìn ba dòng code mà Bé Pi cảm giác mình là hacker trong phim Hollywood. Chỉ thiếu cái kính râm 😎.</p>
+        <p>
+            Cửa sổ VBA bật lên… nhìn cổ như di tích Windows XP, nhưng uy lực thì vẫn như rồng thần trong truyền thuyết.
+        </p>
+
+        <div class="code-box">
+            Dim filePath As String <br/>
+            Dim ws As Worksheet <br/><br/>
+
+            filePath = Application.GetOpenFilename("TSV Files (*.tsv), *.tsv") <br/>
+            Set ws = Sheets.Add <br/>
+            ws.Name = "data" & Sheets.Count <br/><br/>
+
+            With ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A1")) <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;.TextFileParseType = xlDelimited <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;.TextFileOtherDelimiter = vbTab <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;.TextFileColumnDataTypes = Array(1) <br/>
+            &nbsp;&nbsp;&nbsp;&nbsp;.Refresh BackgroundQuery:=False <br/>
+            End With
         </div>
+
+        <p>
+            Nhìn đoạn code dài hơn đời sinh viên năm nhất,  
+            bé Pi cảm giác mình biến thành hacker xịn — chỉ thiếu cái kính râm và tiếng bàn phím gõ *lách tách* phía sau 😎💻.
+        </p>
     </div>
+</div>
+
 
     <!-- Block 3 -->
     <div class="story-block fade">
