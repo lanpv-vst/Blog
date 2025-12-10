@@ -146,13 +146,9 @@
             filePath = Application.GetOpenFilename("TSV Files (*.tsv), *.tsv") <br/>
             Set ws = Sheets.Add <br/>
             ws.Name = "data" & Sheets.Count <br/><br/>
-
-            With ws.QueryTables.Add(Connection:="TEXT;" & filePath, Destination:=ws.Range("A1")) <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;.TextFileParseType = xlDelimited <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;.TextFileOtherDelimiter = vbTab <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;.TextFileColumnDataTypes = Array(1) <br/>
-            &nbsp;&nbsp;&nbsp;&nbsp;.Refresh BackgroundQuery:=False <br/>
+            ...............................................<br/>
             End With
+            <i>(code dỉ code gì cũng có khi đọc hết bài "lày" nhé!)</i>
         </div>
 
         <p>
